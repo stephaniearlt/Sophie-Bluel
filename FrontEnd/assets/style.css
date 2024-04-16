@@ -388,3 +388,9 @@ footer nav ul {
 #login a {
 	color: #3D3D3D;
 }
+
+/* Style modale */
+
+.hidden {
+  display: none;
+}
