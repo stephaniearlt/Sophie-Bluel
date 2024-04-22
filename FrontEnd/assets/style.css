@@ -389,8 +389,21 @@ footer nav ul {
 	color: #3D3D3D;
 }
 
-/* Style modale */
+/* Style mode édition */
 
-.hidden {
-  display: none;
+.edit-mode-bar {
+	background-color: black;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	padding: 10px 0;
+	top: 0;
 }
+
+.edit-mode-bar i {
+	margin-right: 5px;
+}
+
+/* Style modale */
