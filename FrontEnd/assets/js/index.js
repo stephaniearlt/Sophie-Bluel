@@ -8,6 +8,12 @@ const portfolioSection = document.querySelector("#portfolio");
 // Élément de la galerie où l'on souhaite ajouter les projets
 const gallery = document.querySelector("#portfolio .gallery");
 
+const token = localStorage.getItem("token");
+
+let categoriesList = [];
+
+let worksList = [];
+
 ///////////// CRÉATION DE LA PAGE DE PRÉSENTATION DES TRAVAUX /////////////
 
 /////// FONCTIONNALITÉ TRI PAR CATÉGORIE ////////
@@ -97,7 +103,10 @@ function fetchCategoriesAndCreateButtons() {
       return response.json();
     })
     .then((categories) => {
-      createCategoryButtons(categories);
+      categoriesList = categories;
+      if (!token) {
+        createCategoryButtons(categories);
+      }
     })
     .catch((error) => {
       console.error("Erreur lors de la récupération des catégories :", error);
@@ -116,6 +125,7 @@ function fetchProjectsAndDisplay() {
       return response.json();
     })
     .then((projects) => {
+      worksList = projects;
       projects.forEach((project) => {
         const projectFigure = document.createElement("figure");
         projectFigure.setAttribute("data-category-id", project.categoryId);
