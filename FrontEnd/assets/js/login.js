@@ -32,6 +32,7 @@ function LoginFormSubmission(event) {
         // Redirection vers la page d'accueil
         window.location.href = 'index.html';
     })
+        
     .catch(error => {
         // Affichage du message d'erreur
         alert(error.message);

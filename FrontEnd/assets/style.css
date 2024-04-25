@@ -305,15 +305,12 @@ footer nav ul {
 }
 
 /* Style boutons filtre catégories */
-
 #categoryButtonsContainer {
 	display: flex;
 	justify-content: center;
 }
 
 .category-button {
-	align-items: center;
-	justify-content: center;
 	font-family: 'Syne';
 	font-size: 16px;
 	font-weight: 700;
@@ -327,12 +324,17 @@ footer nav ul {
 	margin: 30px 10px 50px;
 }
 
-.category-button.clicked {
+.category-button.active {
 	color: white;
 	background-color: #1D6154;
 }
 
 /* Style page login */
+
+.current-page-link {
+  font-weight: bold;
+  color: black; 
+}
 
 #login h2 {
 	text-align: center;
@@ -398,11 +400,29 @@ footer nav ul {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	padding: 10px 0;
-	top: 0;
+	padding: 10px 5px 0;
 }
 
 .edit-mode-bar i {
+	margin-right: 5px;
+}
+
+#portfolio {
+  position: relative;
+}
+
+.edit-button {
+	position: absolute;
+ 	top: 2px;
+  	right: 30%;
+  	color: black;
+	border: none;
+	background-color: transparent;
+	padding: 8px 16px;
+	cursor: pointer;
+}
+
+.edit-button i {
 	margin-right: 5px;
 }
 

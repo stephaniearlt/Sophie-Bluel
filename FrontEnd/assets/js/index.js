@@ -1,3 +1,5 @@
+///////////// CRÉATION DE LA PAGE DE PRÉSENTATION DES TRAVAUX /////////////
+
 // URL de l'API pour récupérer les catégories
 const categoriesUrl = "http://localhost:5678/api/categories";
 // URL de l'API pour récupérer les projets
@@ -8,13 +10,12 @@ const portfolioSection = document.querySelector("#portfolio");
 // Élément de la galerie où l'on souhaite ajouter les projets
 const gallery = document.querySelector("#portfolio .gallery");
 
+// Récupère le token d'authentification depuis le stockage local du navigateur
 const token = localStorage.getItem("token");
 
+// Initialisation liste vide pour stocker les catégories et projets récupérées depuis l'API
 let categoriesList = [];
-
 let worksList = [];
-
-///////////// CRÉATION DE LA PAGE DE PRÉSENTATION DES TRAVAUX /////////////
 
 /////// FONCTIONNALITÉ TRI PAR CATÉGORIE ////////
 
@@ -28,6 +29,11 @@ function createCategoryButtons(categories) {
   allProjectsButton.textContent = "Tous";
   allProjectsButton.setAttribute("data-category-id", "");
   allProjectsButton.classList.add("category-button");
+
+  // Couleur par défaut du bouton "tous"
+  if (allProjectsButton.getAttribute("data-category-id") === "") {
+    allProjectsButton.classList.add("active");
+  }
 
   // Écouteur d'évènement pour filtrer les projets au clic sur le bouton "tous"
   allProjectsButton.addEventListener("click", () =>
@@ -73,24 +79,15 @@ function filterProjectsByCategory(categoryId) {
     }
   });
 
-  // Retire la classe 'clicked' de tous les boutons
-  document.querySelectorAll(".category-button").forEach((btn) => {
-    btn.classList.remove("clicked");
+  // Ajoute la classe 'active' au bouton cliqué et la retire des autres boutons
+  const categoryButtons = document.querySelectorAll(".category-button");
+  categoryButtons.forEach((btn) => {
+    if (btn.getAttribute("data-category-id") === categoryId) {
+      btn.classList.add("active");
+    } else {
+      btn.classList.remove("active");
+    }
   });
-
-  // Ajoute la classe 'clicked' au bouton cliqué
-  if (categoryId !== "") {
-    const clickedButton = document.querySelector(
-      `.category-button[data-category-id="${categoryId}"]`
-    );
-    clickedButton.classList.add("clicked");
-  } else {
-    // Si categoryId est vide (bouton "Tous" cliqué), ajoute la classe 'clicked' au bouton "Tous"
-    const allProjectsButton = document.querySelector(
-      `.category-button[data-category-id=""]`
-    );
-    allProjectsButton.classList.add("clicked");
-  }
 }
 
 // Fonction pour récupérer les catégories depuis l'API et créer les boutons correspondants

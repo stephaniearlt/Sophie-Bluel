@@ -18,18 +18,18 @@
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
   <body>
+  <div id="edit-mode-bar" class="edit-mode-bar"></div>
     <header>
       <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
       <nav>
         <ul>
           <li>projets</li>
           <li>contact</li>
-          <li><a href="login.html">login</a></li>
+          <li id="login-link"><a href="login.html">login</a></li>
           <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
         </ul>
       </nav>
     </header>
-    <div id="edit-mode-bar" class="edit-mode-bar"></div>
     <main>
       <section id="introduction">
         <figure>
@@ -50,13 +50,14 @@
           </p>
           <p>
             En cas de besoin, une équipe pluridisciplinaire peut-être constituée
-            : architecte DPLG, décorateur(trice)
+            : architecte DPLG, décorateur(trice).
           </p>
         </article>
       </section>
       <section id="portfolio">
         <h2>Mes Projets</h2>
         <div class="gallery"></div>
+        <!-- Suppression des éléments HTML comme demandée -->
       </section>
       <section id="contact">
         <h2>Contact</h2>
@@ -73,21 +74,7 @@
       </section>
 
       <!-- Structure de la modale -->
-      <aside
-        id="modal"
-        class="modal"
-        aria-hidden="true"
-        role="dialog"
-        style="display: none"
-        ;
-      >
-        <div id="gallery-view" class="modal-gallery-view">
-          <!-- Contenu de la vue "Galerie photo" généré dynamiquement par Javascript -->
-        </div>
-        <div id="add-photo-view" class="modal-add-photo-view">
-          <!-- Contenu de la vue "Ajout photo" généré dynamiquement par Javascript -->
-        </div>
-      </aside>
+      
     </main>
 
     <footer>
@@ -98,7 +85,6 @@
       </nav>
     </footer>
     <script src="./assets/JS/index.js"></script>
-    <script src="./assets/JS/modale.js"></script>
     <script src="./assets/JS/edit.js"></script>
   </body>
 </html>
