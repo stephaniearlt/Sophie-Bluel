@@ -17,8 +17,9 @@
     <meta name="description" content="" />
     <link rel="stylesheet" href="./assets/style.css" />
   </head>
+
   <body>
-  <div id="edit-mode-bar" class="edit-mode-bar"></div>
+    <div id="edit-mode-bar" class="edit-mode-bar"></div>
     <header>
       <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
       <nav>
@@ -72,11 +73,16 @@
           <input type="submit" value="Envoyer" />
         </form>
       </section>
-
-      <!-- Structure de la modale -->
-      
     </main>
-
+    <!-- Structure de la modale -->
+    <div class="containerModals">
+      <div class="modalGallery">
+        <span class="closeModal"><i class="fa-solid fa-xmark"></i></span>
+        <h3>Galerie photo</h3>
+        <div class="contentModalGallery"></div>
+        <button class="btn-modal">Ajouter une photo</button>
+      </div>
+    </div>
     <footer>
       <nav>
         <ul>
@@ -86,5 +92,6 @@
     </footer>
     <script src="./assets/JS/index.js"></script>
     <script src="./assets/JS/edit.js"></script>
+    <script src="./assets/JS/modale.js"></script>
   </body>
 </html>

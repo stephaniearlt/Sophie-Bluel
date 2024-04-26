@@ -80,6 +80,22 @@ function disableEditMode() {
   }
 }
 
+// Appel de la fonction pour créer le lien de connexion ou de déconnexion
+createLoginLink();
+
+// Insertion du bandeau et activation du mode édition si l'utilisateur est connecté
+if (isUserLoggedIn()) {
+  const editModeBar = createEditModeBar();
+  document.body.insertBefore(editModeBar, document.body.firstChild);
+  enableEditMode();
+} else {
+  // Masquer le bandeau s'il n'est pas connecté
+  const editModeBar = document.querySelector(".edit-mode-bar");
+  if (editModeBar) {
+    editModeBar.style.display = "none";
+  }
+}
+
 // Insertion du bouton "modifier" pour télécharger ou supprimer des projets
 function createEditButton() {
   const editButtonContainer = document.createElement("div");
@@ -103,20 +119,4 @@ function createEditButton() {
   editButtonContainer.appendChild(editButton);
 
   return editButtonContainer;
-}
-
-// Appel de la fonction pour créer le lien de connexion ou de déconnexion
-createLoginLink();
-
-// Insertion du bandeau et activation du mode édition si l'utilisateur est connecté
-if (isUserLoggedIn()) {
-  const editModeBar = createEditModeBar();
-  document.body.insertBefore(editModeBar, document.body.firstChild);
-  enableEditMode();
-} else {
-  // Masquer le bandeau s'il n'est pas connecté
-  const editModeBar = document.querySelector(".edit-mode-bar");
-  if (editModeBar) {
-    editModeBar.style.display = "none";
-  }
 }
