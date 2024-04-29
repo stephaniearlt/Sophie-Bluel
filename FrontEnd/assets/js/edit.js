@@ -3,6 +3,17 @@ function isUserLoggedIn() {
   return localStorage.getItem("token");
 }
 
+// Fonction pour déconnecter l'utilisateur
+function logoutUser() {
+  // Supprime le token d'authentification du local storage
+  localStorage.removeItem("token");
+  // Redirection vers la page de connexion
+  window.location.href = "index.html";
+}
+
+// Appel de la fonction pour créer le lien de connexion ou de déconnexion
+createLoginLink();
+
 // Création du lien de connexion ou de déconnexion
 function createLoginLink() {
   const loginNavItem = document.querySelector("#login-link");
@@ -24,12 +35,22 @@ function createLoginLink() {
   }
 }
 
-// Fonction pour déconnecter l'utilisateur
-function logoutUser() {
-  // Supprime le token d'authentification du local storage
-  localStorage.removeItem("token");
-  // Redirection vers la page de connexion
-  window.location.href = "index.html";
+// Fonction pour activer le mode édition
+function enableEditMode() {
+  // Masquer les boutons de catégorie si l'utilisateur est connecté
+  const categoryButtonsContainer = document.getElementById("categoryButtonsContainer");
+  if (categoryButtonsContainer) {
+    categoryButtonsContainer.style.display = "none";
+  }
+}
+
+// Fonction pour désactiver le mode édition
+function disableEditMode() {
+  // Afficher les boutons de catégorie si l'utilisateur est connecté
+  const categoryButtonsContainer = document.getElementById("categoryButtonsContainer");
+  if (categoryButtonsContainer) {
+    categoryButtonsContainer.style.display = "block";
+  }
 }
 
 // Création du bandeau de mode édition
@@ -51,38 +72,6 @@ function createEditModeBar() {
   return editModeBar;
 }
 
-// Fonction pour activer le mode édition
-function enableEditMode() {
-  // Masquer les boutons de catégorie si l'utilisateur est connecté
-  const categoryButtonsContainer = document.getElementById("categoryButtonsContainer");
-  if (categoryButtonsContainer) {
-    categoryButtonsContainer.style.display = "none";
-  }
-
-  // Afficher le bouton "Modifier" dans la section "Mes Projets"
-  const editButtonContainer = createEditButton();
-  const projectsSection = document.querySelector("#portfolio");
-  projectsSection.insertBefore(editButtonContainer, projectsSection.firstChild);
-}
-
-// Fonction pour désactiver le mode édition
-function disableEditMode() {
-  // Afficher les boutons de catégorie si l'utilisateur est connecté
-  const categoryButtonsContainer = document.getElementById("categoryButtonsContainer");
-  if (categoryButtonsContainer) {
-    categoryButtonsContainer.style.display = "block";
-  }
-
-  // Supprimer le bouton "Modifier"
-  const editButtonContainer = document.querySelector(".edit-button-container");
-  if (editButtonContainer) {
-    editButtonContainer.remove();
-  }
-}
-
-// Appel de la fonction pour créer le lien de connexion ou de déconnexion
-createLoginLink();
-
 // Insertion du bandeau et activation du mode édition si l'utilisateur est connecté
 if (isUserLoggedIn()) {
   const editModeBar = createEditModeBar();
@@ -96,27 +85,32 @@ if (isUserLoggedIn()) {
   }
 }
 
-// Insertion du bouton "modifier" pour télécharger ou supprimer des projets
-function createEditButton() {
-  const editButtonContainer = document.createElement("div");
-  editButtonContainer.classList.add("edit-button-container");
+// Fonction pour activer le bouton "Modifier" en mode édition
+function enableEditButton() {
+  const editButton = document.getElementById("edit-button");
+  if (editButton) {
+    editButton.style.display = "block";
+    editButton.addEventListener("click", handleEditButtonClick);
+  }
+}
 
-  const editButton = document.createElement("button");
-  editButton.classList.add("edit-button");
+// Fonction pour désactiver le bouton "Modifier"
+function disableEditButton() {
+  const editButton = document.getElementById("edit-button");
+  if (editButton) {
+    editButton.removeEventListener("click", handleEditButtonClick);
+  }
+}
 
-  // Création de l'icône avec la classe appropriée
-  const editIcon = document.createElement("i");
-  editIcon.classList.add("far", "fa-pen-to-square");
+// Fonction à exécuter lorsque le bouton "Modifier" est cliqué
+function handleEditButtonClick() {
+}
 
-  const editText = document.createElement("span");
-  editText.textContent = "Modifier";
-
-  // Ajout de l'icône et du texte dans le bouton
-  editButton.appendChild(editIcon);
-  editButton.appendChild(editText);
-
-  // Ajout du bouton dans son conteneur
-  editButtonContainer.appendChild(editButton);
-
-  return editButtonContainer;
+// Activation du bouton "Modifier" en mode édition
+if (isUserLoggedIn()) {
+  enableEditMode();
+  enableEditButton();
+} else {
+  disableEditMode();
+  disableEditButton();
 }
