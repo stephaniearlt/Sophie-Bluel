@@ -1,9 +1,11 @@
-// Fonction pour vérifier si l'utilisateur est connecté
+/////// MODE EDITION ////////
+
+// Vérifie si l'utilisateur est connecté
 function isUserLoggedIn() {
   return localStorage.getItem("token");
 }
 
-// Fonction pour déconnecter l'utilisateur
+// Déconnection de l'utilisateur
 function logoutUser() {
   // Supprime le token d'authentification du local storage
   localStorage.removeItem("token");
@@ -22,7 +24,7 @@ function createLoginLink() {
     if (isUserLoggedIn()) {
       const logoutLink = document.createElement("a");
       logoutLink.textContent = "logout";
-      logoutLink.href = "#"; 
+      logoutLink.href = "#";
       logoutLink.addEventListener("click", logoutUser);
 
       // Remplace le contenu du lien de déconnexion
@@ -35,82 +37,23 @@ function createLoginLink() {
   }
 }
 
-// Fonction pour activer le mode édition
-function enableEditMode() {
-  // Masquer les boutons de catégorie si l'utilisateur est connecté
-  const categoryButtonsContainer = document.getElementById("categoryButtonsContainer");
-  if (categoryButtonsContainer) {
-    categoryButtonsContainer.style.display = "none";
+// Affichage mode admin si connexion réussie
+function adminMode() {
+  if (localStorage.getItem("token")) {
+    // Création de la bannière
+    const bannerTemplate = `<div class="edit-mode-bar"><i class="fas fa-regular fa-pen-to-square"></i><p>Mode édition</p></div>`;
+    const body = document.querySelector("body");
+    body.insertAdjacentHTML("afterbegin", bannerTemplate);
+    // Création du bouton modifier
+    const editButtonTemplate = `<a href="#" id="edit-button"><i class="fa-regular fa-pen-to-square"></i>modifier</a>`;
+    // Positionnement du bouton modifier
+    const galleryTitle = document.querySelector("#portfolio h2");
+    galleryTitle.insertAdjacentHTML("afterend", editButtonTemplate);
+    // Ajout d'un href="#modal" sur le bouton modifier de la galerie
+    const editButtonGallery = document.querySelector("#portfolio a");
+    editButtonGallery.href = "#modal";
+    editButtonGallery.classList.add("open-modal");
   }
 }
 
-// Fonction pour désactiver le mode édition
-function disableEditMode() {
-  // Afficher les boutons de catégorie si l'utilisateur est connecté
-  const categoryButtonsContainer = document.getElementById("categoryButtonsContainer");
-  if (categoryButtonsContainer) {
-    categoryButtonsContainer.style.display = "block";
-  }
-}
-
-// Création du bandeau de mode édition
-function createEditModeBar() {
-  const editModeBar = document.createElement("div");
-  editModeBar.classList.add("edit-mode-bar");
-
-  // Création de l'icône avec la classe appropriée
-  const editIcon = document.createElement("i");
-  editIcon.classList.add("far", "fa-pen-to-square");
-
-  const editText = document.createElement("span");
-  editText.textContent = "Mode édition";
-
-  // Ajout de l'icône avant le texte
-  editModeBar.appendChild(editIcon);
-  editModeBar.appendChild(editText);
-
-  return editModeBar;
-}
-
-// Insertion du bandeau et activation du mode édition si l'utilisateur est connecté
-if (isUserLoggedIn()) {
-  const editModeBar = createEditModeBar();
-  document.body.insertBefore(editModeBar, document.body.firstChild);
-  enableEditMode();
-} else {
-  // Masquer le bandeau s'il n'est pas connecté
-  const editModeBar = document.querySelector(".edit-mode-bar");
-  if (editModeBar) {
-    editModeBar.style.display = "none";
-  }
-}
-
-// Fonction pour activer le bouton "Modifier" en mode édition
-function enableEditButton() {
-  const editButton = document.getElementById("edit-button");
-  if (editButton) {
-    editButton.style.display = "block";
-    editButton.addEventListener("click", handleEditButtonClick);
-  }
-}
-
-// Fonction pour désactiver le bouton "Modifier"
-function disableEditButton() {
-  const editButton = document.getElementById("edit-button");
-  if (editButton) {
-    editButton.removeEventListener("click", handleEditButtonClick);
-  }
-}
-
-// Fonction à exécuter lorsque le bouton "Modifier" est cliqué
-function handleEditButtonClick() {
-}
-
-// Activation du bouton "Modifier" en mode édition
-if (isUserLoggedIn()) {
-  enableEditMode();
-  enableEditButton();
-} else {
-  disableEditMode();
-  disableEditButton();
-}
+adminMode();

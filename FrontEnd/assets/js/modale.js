@@ -1,188 +1,152 @@
-//////////// CONSTANTES ////////////
+/////// MODALES ////////
 
-// Récupération des éléments pour la modale
-const containerModals = document.querySelector(".containerModals");
-const modalGallery = document.querySelector(".modalGallery");
-const editButton = document.querySelector("#edit-button");
-const closeModalButtons = document.querySelectorAll('.closeModal');
-const modalContent = document.querySelector(".contentModalGallery");
-const addButton = document.querySelector('.btn-modal');
-const secondModal = document.querySelector('.modalAddPhoto');
-const returnModalButton = document.querySelector(".returnModal");
+// Fonction pour afficher les projets dans la galerie
+async function displayProjectsInModal(container) {
+  try {
+    const works = document.querySelectorAll(".gallery img");
+    works.forEach((work, index) => {
+      // Crée une figure pour chaque projet
+      const figure = document.createElement("figure");
 
-// Variable pour stocker l'état précédent de la modale
-let previousModal = null;
+      // Crée l'image du projet
+      const image = document.createElement("img");
+      image.setAttribute("crossorigin", "anonymous");
+      image.setAttribute("src", work.getAttribute("src"));
+      image.alt = work.alt;
+      image.dataset.id = index + 1; 
 
-//////////// ECOUTEURS D'EVENEMENTS ////////////
+      // Crée l'icône de poubelle 
+      const deleteIcon = document.createElement("i");
+      deleteIcon.classList.add("fa", "fa-trash-alt", "delete-icon");
+      deleteIcon.addEventListener("click", () => deleteWork(image)); 
 
-// Pour ouvrir la modale "galerie photo"
-editButton.addEventListener("click", () => {
-  console.log("Clic sur le bouton 'Modifier'"); 
-  openModal();
-});
+      // Ajoute l'image et l'icône de poubelle 
+      figure.appendChild(image);
+      figure.appendChild(deleteIcon);
 
-// Pour ouvrir la modale "ajout photo"
-addButton.addEventListener('click', () => {
-    console.log("Clic sur le bouton 'Ajouter une photo'");
-
-    // Rendre la seconde modale visible
-    secondModal.style.display = 'block';
-    console.log("Affichage de la seconde modale");
-
-    // Enregistrement de la modale précédente
-    previousModal = modalGallery;
-
-    // Masquer la première modale
-    modalGallery.style.display = 'none';
-    console.log("Masquage de la première modale");
-
-    // Vérifie la valeur de previousModal après l'ouverture de la modale "ajout photo"
-    console.log("previousModal après l'ouverture de la modale 'ajout photo':", previousModal);
-});
-
-// Bouton de retour modale "ajout photo"
-returnModalButton.addEventListener("click", () => {
-    console.log("Clic sur le bouton de retour");
-    closeModal();
-    // Affichage modale "galerie photo" si modale précédente "ajout photo"
-    if (previousModal === secondModal) {
-        modalGallery.style.display = 'block';
-    } else {
-        // Affichage modale précédente
-        previousModal.style.display = 'block';
-    }
-
-    // Vérifie la valeur de previousModal après le clic sur le bouton de retour
-    console.log("previousModal après le clic sur le bouton de retour:", previousModal);
-});
-
-// Pour fermer les modales
-closeModalButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        closeModal();
+      // Ajoute la figure à la galerie
+      container.appendChild(figure);
     });
-});
+  } catch (error) {
+    console.error("Erreur lors de l'affichage des projets dans la modale :", error);
+  }
+}
 
-// Pour fermer les modales en dehors
-containerModals.addEventListener("click", (event) => {
-  if (event.target === containerModals) {
+// Fonction pour gérer la suppression d'un projet
+async function deleteWork(work) {
+  try {
+    const workId = work.dataset.id; 
+    const response = await fetch(`${WORKS_URL}/${workId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (response.ok) {
+      // Si la suppression est réussie, actualisation de l'affichage dans la modale et dans la galerie du portfolio
+      await displayWorks();
+      const modalGallery = document.querySelector(".modal-wrapper-delete #modal-gallery");
+      deleteWorksInModal();
+      await displayProjectsInModal(modalGallery);
+    } else {
+      throw new Error("Erreur lors de la suppression du projet");
+    }
+  } catch (error) {
+    console.error("Erreur lors de la suppression du projet :", error);
+  }
+}
+
+// Fonction pour ouvrir la modale
+function openModal() {
+  const modal = document.getElementById("modal");
+  modal.classList.add("active");
+  modal.setAttribute("aria-hidden", "false");
+
+  // Affiche les projets dans la galerie de la modale
+  const containerGallery = document.querySelector(
+    ".modal-wrapper-delete #modal-gallery"
+  );
+  displayProjectsInModal(containerGallery);
+}
+
+// Suppression des travaux de la galerie
+function deleteWorksInModal() {
+  const gallery = document.querySelector(
+    ".modal-wrapper-delete #modal-gallery"
+  );
+  while (gallery.firstChild) {
+    gallery.removeChild(gallery.firstChild);
+  }
+}
+
+// Fonction pour fermer la modale
+function closeModal() {
+  const modal = document.getElementById("modal");
+  modal.classList.remove("active");
+  modal.setAttribute("aria-hidden", "true");
+
+  // Supprime les projets de la galerie de la modale lors de la fermeture
+  deleteWorksInModal();
+}
+
+// Fermeture au clic sur la croix ou hors de la modale
+document.addEventListener("click", function (event) {
+  const modal = document.getElementById("modal");
+  const modalContent = document.querySelector(".modal-wrapper-delete");
+
+  // Vérifie si l'élément cliqué est la croix de fermeture
+  if (event.target.matches(".close-modal")) {
+    closeModal();
+  }
+
+  // Vérifie si l'élément cliqué est en dehors de la modale
+  if (!modalContent.contains(event.target) && event.target !== modal) {
     closeModal();
   }
 });
 
-//////////// FONCTIONS ////////////
+// Ouverture au clic sur le bouton modifier
+document.addEventListener("click", function (event) {
+  if (event.target.matches(".open-modal")) {
+    openModal();
+  }
+});
 
-// Fonction pour ouvrir la modale "galerie photo"
-function openModal() {
-    console.log("Ouverture de la modale");
-    // Affichage de la modale "galerie photo" si la modale précédente est la modale "ajout photo"
-    if (previousModal === secondModal) {
-        modalGallery.style.display = "block";
-    } else {
-        containerModals.style.display = "block";
-        modalGallery.style.display = "block";
-    }
-    // Enregistrement de la modale précédente
-    previousModal = modalGallery;
+function modalDeleteWorks() {
+  try {
+    // Récupération de la modale de suppression des travaux
+    const modalWrapper = document.querySelector(".modal-wrapper-delete");
+
+    // Création du bouton de fermeture de la modale
+    const closeModalButton = document.createElement("i");
+    closeModalButton.classList.add("fa-solid", "fa-xmark", "close-modal");
+
+    // Création du titre de la modale
+    const titleModal = document.createElement("h3");
+    titleModal.innerText = "Galerie photo";
+
+    // Création du conteneur de la galerie
+    const containerGallery = document.createElement("div");
+    containerGallery.setAttribute("id", "modal-gallery");
+
+    // Affiche les projets dans la galerie de la modal
+    displayProjectsInModal(containerGallery);
+
+    // Création du bouton "Ajouter photo"
+    const addWork = document.createElement("button");
+    addWork.classList.add("add-photo-button");
+    addWork.innerText = "Ajouter une photo";
+
+    // Rattachement des éléments au DOM
+    modalWrapper.appendChild(closeModalButton);
+    modalWrapper.appendChild(titleModal);
+    modalWrapper.appendChild(containerGallery);
+    modalWrapper.appendChild(addWork);
+  } catch (error) {
+    console.error("Erreur lors de l'affichage des travaux dans la modale :", error);
+  }
 }
 
-// Fonction pour fermer les modales
-function closeModal() {
-    console.log("Fermeture de la modale");
-    // Fermeture de toutes les modales
-    containerModals.style.display = "none";
-    modalGallery.style.display = "none";
-    secondModal.style.display = "none";
-}
-
-// Chargement des images depuis l'API
-fetch(worksUrl)
-  .then((response) => response.json())
-    .then((data) => {
-      modalContent.innerHTML = "";
-      data.forEach((project) => {
-        const projectContainer = document.createElement("div");
-        projectContainer.classList.add("project-container");
-
-        const imgElement = document.createElement("img");
-        imgElement.src = project.imageUrl;
-        imgElement.alt = project.title;
-
-        const deleteIcon = document.createElement("i");
-        deleteIcon.classList.add("fa", "fa-trash", "delete-icon");
-        deleteIcon.dataset.projectId = project.id; 
-         deleteIcon.addEventListener("click", (event) => {
-          event.stopPropagation(); 
-          const projectId = deleteIcon.dataset.projectId;
-          deleteProject(projectId);
-        });
-
-        projectContainer.appendChild(imgElement);
-        projectContainer.appendChild(deleteIcon);
-        modalContent.appendChild(projectContainer);
-      });
-      addDeleteEventListeners();
-    })
-    .catch((error) => {
-      console.error("Une erreur s'est produite :", error);
-    });
-
-// Test suppression sans effectuer l'appel à l'API réel
-function deleteProjectTest(projectId) {
-  const deleteUrl = `http://localhost:5678/api/works/${projectId}`;
-  console.log("Appel à l'URL de suppression :", deleteUrl);
-
-  // Simulation du succès
-  console.log("Suppression réussie pour le projet avec l'ID :", projectId);
-  openModal(); // Réouverture de la modale
-}
-
-function addDeleteEventListeners() {
-  const deleteIcons = document.querySelectorAll('.delete-icon');
-  deleteIcons.forEach(icon => {
-    icon.addEventListener('click', (event) => {
-      event.stopPropagation(); // Arrête la propagation de l'événement
-      const projectId = icon.dataset.projectId;
-      deleteProjectTest(projectId); // Utilise la fonction de test
-    });
-  });
-}
-
-// PAUSE POUR TEST //
-/*
-// Fonction pour supprimer un projet
-function deleteProject(projectId) {
-  const deleteUrl = `http://localhost:5678/api/works/${projectId}`;
-  const token = localStorage.getItem("token"); // Récupère le jeton d'authentification
-
-  fetch(deleteUrl, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json',
-    },
-  })
-  .then(response => {
-    if (response.ok) {
-      openModal();
-    } else {
-      console.error('Erreur lors de la suppression du projet');
-    }
-  })
-  .catch(error => {
-    console.error('Une erreur s\'est produite :', error);
-  });
-}
-
-// Ajoutez un gestionnaire d'événements à chaque icône de poubelle pour détecter le clic de l'utilisateur
-function addDeleteEventListeners() {
-  const deleteIcons = document.querySelectorAll('.delete-icon');
-  deleteIcons.forEach(icon => {
-    icon.addEventListener('click', (event) => {
-      event.stopPropagation(); // Arrête la propagation de l'événement
-      const projectId = icon.dataset.projectId;
-      deleteProject(projectId);
-    });
-  });
-}
-*/
+// Appel de la fonction pour afficher les travaux dans la modale
+modalDeleteWorks();

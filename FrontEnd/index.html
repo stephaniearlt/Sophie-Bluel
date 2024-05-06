@@ -15,7 +15,6 @@
 </head>
 
 <body>
-  <div id="edit-mode-bar" class="edit-mode-bar"></div>
   <header>
     <h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
     <nav>
@@ -53,7 +52,6 @@
     </section>
     <section id="portfolio">
       <h2>Mes Projets</h2>
-      <button id="edit-button"><i class="far fa-pen-to-square"></i>Modifier</button>
       <div class="gallery"></div>
       <!-- Suppression des éléments HTML comme demandée -->
     </section>
@@ -71,36 +69,15 @@
       </form>
     </section>
   </main>
-  <!-- Structure de la modale -->
-  <div class="containerModals">
-    <div class="modalGallery">
-      <span class="closeModal"><i class="fa-solid fa-xmark"></i></span>
-      <h3>Galerie photo</h3>
-      <div class="contentModalGallery"></div>
-      <button class="btn-modal">Ajouter une photo</button>
+  <aside id="modal">
+    <div class="overlay"></div>
+    <div class="modal-wrapper modal-wrapper-delete stop-modal">
+      <!-- Contenu de la première modal -->
     </div>
-    <div class="modalAddPhoto">
-      <span class="closeModal"><i class="fa-solid fa-xmark"></i></span>
-      <span class="returnModal"><i class="fa-solid fa-arrow-left"></i></span>
-      <h3>Ajout photo</h3>
-      <form action="">
-        <div class="containerFile">
-          <span class="uploadImg"><i class="fa-regular fa-image"></i></span>
-          <label for="file">+ Ajouter photo</label>
-          <input type="file" id="file" name="image" accept="image/*">
-          <img src="#" alt="Aperçu de l'image">
-          <p>jpg. png. : 4mo max</p>
-        </div>
-        <div class="descriptionFile">
-          <label for="title">Titre</label>
-          <input type="text" id="title" name="title">
-          <label for="category">Catégorie</label>
-          <select name="category" id="category"></select>
-          <button class="btn-modalAddPhoto" type="submit">Valider</button>
-        </div>
-      </form>
+    <div class="modal-wrapper modal-wrapper-add stop-modal">
+      <!-- Contenu de la deuxième modal -->
     </div>
-  </div>
+  </aside>
   <footer>
     <nav>
       <ul>
@@ -108,6 +85,7 @@
       </ul>
     </nav>
   </footer>
+  <!-- <script src="./assets/JS/all.js"></script>-->
   <script src="./assets/JS/index.js"></script>
   <script src="./assets/JS/edit.js"></script>
   <script src="./assets/JS/modale.js"></script>

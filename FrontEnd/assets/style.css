@@ -135,6 +135,12 @@ table {
 }
 
 /** end reset css**/
+
+/* Style pour cacher des éléments par défaut */
+.hidden {
+  display: none;
+}
+
 body {
   max-width: 1140px;
   margin: auto;
@@ -173,6 +179,15 @@ h2 {
   font-weight: 700;
   font-size: 30px;
   color: #1d6154;
+}
+
+h3 {
+  font-family: 'Work Sans';
+  font-weight: 400;
+  font-size: 26px;
+  line-height: 30px;
+  text-align: center;
+  padding-top: 30px;
 }
 
 nav ul {
@@ -305,12 +320,12 @@ footer nav ul {
 }
 
 /* Style boutons filtre catégories */
-#categoryButtonsContainer {
+#container-filters {
   display: flex;
   justify-content: center;
 }
 
-.category-button {
+.button-filter {
   font-family: "Syne";
   font-size: 16px;
   font-weight: 700;
@@ -324,7 +339,7 @@ footer nav ul {
   margin: 30px 10px 50px;
 }
 
-.category-button.active {
+.button-filter.active {
   color: white;
   background-color: #1d6154;
 }
@@ -400,7 +415,7 @@ footer nav ul {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 10px 5px 0;
+  padding: 10px 5px;
 }
 
 .edit-mode-bar i {
@@ -412,7 +427,6 @@ footer nav ul {
 }
 
 #edit-button {
-  display: none;
   position: absolute;
   top: 2px;
   right: 30%;
@@ -421,6 +435,7 @@ footer nav ul {
   background-color: transparent;
   padding: 8px 16px;
   cursor: pointer;
+  text-decoration: none;
 }
 
 #edit-button i {
@@ -429,74 +444,64 @@ footer nav ul {
 
 /* Style modales */
 
-.containerModals {
-  display: none;
+#modal {
+  visibility: hidden;
   position: fixed;
   top: 0;
   left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#modal.active {
+  /* display: block; */
+  visibility: visible;
+}
+
+.overlay {
+  opacity: 0;
+  position: fixed;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5);
+  transition: opacity 0.4s;
+  z-index: 9998;
 }
 
-/* Modale galerie photo */
+#modal.active .overlay {
+  opacity: 1;
+}
 
-.modalGallery,
-.modalAddPhoto {
-  display: flex;
-  flex-direction: column;
-  position: relative;
+.modal-wrapper-delete {
+  /*opacity: 0;*/
   width: 630px;
-  max-width: 90%;
   height: auto;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  overflow: auto;
-}
-
-.containerModals h3 {
-  margin: 30px auto;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  position: absolute;
+  padding: 30px;
+  transition: opacity 0.4s ease-out;
+  z-index: 10000;
   text-align: center;
-  font-weight: 400;
-  font-size: 26px;
 }
 
-.closeModal {
+.close-modal {
   position: absolute;
   top: 20px;
   right: 20px;
+  border: none;
+  background: transparent;
   cursor: pointer;
+  font-size: 24px;
 }
 
-.contentModalGallery img {
-  width: 80px;
-  height: 105px;
-  margin: 5px;
-}
-
-.contentModalGallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  max-width: 470px;
-  margin: 0 auto;
-}
-
-.contentModalGallery::after {
-  content: "";
-  display: block;
-  width: 100%;
-  border-bottom: 1px solid #B3B3B3;
-  margin-top: 75px;
-}
-
-.btn-modal {
+.add-photo-button {
   font-family: "Syne";
   font-size: 14px;
   font-weight: 700;
@@ -509,13 +514,26 @@ footer nav ul {
   padding: 8px 16px;
   border-radius: 60px;
   cursor: pointer;
-  margin: 30px auto;
+  margin: 0 auto 30px;
 }
 
-.project-container {
+.modal-wrapper-delete img {
+  width: 75px;
+  height: 105px;
+  margin: 5px;
+}
+
+#modal-gallery {
+	margin: 40px 75px;
+	display: flex;
+	flex-wrap: wrap;
+	padding-bottom: 30px;
+	gap: 10px;
+	border-bottom: solid 1px #B3B3B3;
+}
+
+figure {
   position: relative;
-  display: inline-block;
-  padding-bottom: 15px;
 }
 
 .delete-icon {
@@ -531,114 +549,4 @@ footer nav ul {
   background-color: black;
   text-align: center;
   border-radius: 2px;
-}
-
-/* Modale ajout photo */
-
-.modalAddPhoto {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.returnModal {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  cursor: pointer;
-}
-
-.containerFile,
-.descriptionFile {
-  width: 420px;
-  margin: 0 auto 20px;
-}
-.containerFile {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background-color: #E8F1F6;
-  height: 169px;
-  border-radius: 3px;
-}
-
-.fa-image {
-  font-size: 3rem;
-  color: #0000004D;
-}
-
-.containerFile label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #CBD6DC;
-  border-radius: 50px;
-  color: #306685;
-  width: 173px;
-  height: 36px;
-  margin: 10px auto;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.containerFile input {
-  display: none;
-}
-
-.containerFile img {
-  display: none;
-}
-
-.containerFile p {
-  color: #444444;
-  font-size: 10px;
-}
-
-.descriptionFile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-.descriptionFile label,
-.descriptionFile select,
-.descriptionFile input {
-  width: 100%;
-}
-
-.descriptionFile select,
-.descriptionFile input {
-  border: none;
-  color: white;
-  box-shadow: 0px 4px 14px 0px #00000017;
-  height: 50px;
-  margin: 10px 0;
-}
-
-.btn-modalAddPhoto {
-  font-family: "Syne";
-  font-size: 14px;
-  font-weight: 700;
-  color: white;
-  background: #A7A7A7;
-  border: 1px solid #A7A7A7;
-  width: 100%;
-  max-width: 237px;
-  height: 36px;
-  padding: 8px 16px;
-  border-radius: 60px;
-  cursor: pointer;
-  margin: 30px auto;
-}
-
-.descriptionFile::after {
-  content: "";
-  position: absolute;
-  bottom: 80px; 
-  left: 0; 
-  width: 100%; 
-  border-bottom: 1px solid #B3B3B3;
 }
