@@ -187,7 +187,7 @@ h3 {
   font-size: 26px;
   line-height: 30px;
   text-align: center;
-  padding-top: 30px;
+  padding: 30px 0;
 }
 
 nav ul {
@@ -442,7 +442,9 @@ footer nav ul {
   margin-right: 5px;
 }
 
-/* Style modales */
+/********** Style modales *******/
+
+/* Styles communs */
 
 #modal {
   visibility: hidden;
@@ -458,7 +460,6 @@ footer nav ul {
 }
 
 #modal.active {
-  /* display: block; */
   visibility: visible;
 }
 
@@ -478,8 +479,36 @@ footer nav ul {
   opacity: 1;
 }
 
+.delete-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  font-size: 9px;
+  color: white;
+  cursor: pointer;
+  background-color: black;
+  text-align: center;
+  border-radius: 2px;
+}
+
+/* ModalDelete */
+
 .modal-wrapper-delete {
-  /*opacity: 0;*/
+  width: 630px;
+  height: auto;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  position: absolute;
+  padding: 30px;
+  transition: opacity 0.4s ease-out;
+  z-index: 10001;
+  text-align: center;
+}
+
+.modal-wrapper-add {
   width: 630px;
   height: auto;
   background-color: #FFFFFF;
@@ -501,7 +530,8 @@ footer nav ul {
   font-size: 24px;
 }
 
-.add-photo-button {
+.add-photo-button,
+.btn-modalAddPhoto {
   font-family: "Syne";
   font-size: 14px;
   font-weight: 700;
@@ -524,29 +554,142 @@ footer nav ul {
 }
 
 #modal-gallery {
-	margin: 40px 75px;
-	display: flex;
-	flex-wrap: wrap;
-	padding-bottom: 30px;
-	gap: 10px;
-	border-bottom: solid 1px #B3B3B3;
+  margin: 10px 75px 40px;
+  display: flex;
+  flex-wrap: wrap;
+  padding-bottom: 30px;
+  gap: 10px;
+  border-bottom: solid 1px #B3B3B3;
 }
 
 figure {
   position: relative;
 }
 
-.delete-icon {
+/* ModalAdd */
+
+.back-modal {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 15px;
-  height: 15px;
-  line-height: 15px;
-  font-size: 9px;
-  color: white;
+  top: 20px;
+  left: 20px;
   cursor: pointer;
-  background-color: black;
-  text-align: center;
-  border-radius: 2px;
+  font-size: 24px;
 }
+
+.containerFile,
+.descriptionFile {
+  width: 420px;
+  margin: 0 auto 20px;
+}
+
+.containerFile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #E8F1F6;
+  height: 169px;
+  border-radius: 3px;
+}
+
+.uploadImg {
+  font-size: 3rem;
+  color: #0000004D;
+}
+
+.descriptionFile label {
+  text-align: left;
+}
+
+.containerFile label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #CBD6DC;
+  border-radius: 50px;
+  color: #306685;
+  width: 173px;
+  height: 36px;
+  margin: 10px auto;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.containerFile input {
+  display: none;
+}
+
+.containerFile img {
+  display: none;
+}
+
+.containerFile img.visible {
+  display: block;
+}
+
+.containerFile img {
+  max-width: 129px;
+  max-height: 100%;
+}
+
+.containerFile p {
+  color: #444444;
+  font-size: 10px;
+}
+
+.descriptionFile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.descriptionFile label,
+.descriptionFile select,
+.descriptionFile input {
+  width: 100%;
+}
+
+.descriptionFile select,
+.descriptionFile input {
+  border: none;
+  box-shadow: 0px 4px 14px 0px #00000017;
+  height: 50px;
+  margin: 10px 0;
+}
+
+.descriptionFile select {
+  position: relative;
+  font-family: Work Sans;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+  border: none;
+  padding-right: 20px;
+}
+
+.btn-modalAddPhoto {
+  font-family: "Syne";
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  background: #A7A7A7;
+  border: 1px solid #A7A7A7;
+  width: 100%;
+  max-width: 237px;
+  height: 36px;
+  padding: 8px 16px;
+  border-radius: 60px;
+  cursor: pointer;
+  margin: 30px auto;
+  position: relative;
+}
+
+/*.btn-modalAddPhoto::before {
+  content: "";
+  position: absolute;
+  bottom: 60px;
+  left: -90px;
+  width: 420px;
+  border-bottom: 1px solid #B3B3B3;
+}*/
