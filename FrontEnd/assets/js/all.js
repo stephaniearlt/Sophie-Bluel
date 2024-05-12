@@ -14,9 +14,10 @@ const body = document.querySelector("body");
 const gallery = document.querySelector(".gallery");
 const modal = document.querySelector("#modal");
 const modalWrapperAdd = document.querySelector(".modal-wrapper-add");
+const modalWrapperDelete = document.querySelector(".modal-wrapper-delete");
 let categories = [];
 let works = [];
-let form;
+let fileInput;
 
 /////// FONCTIONNALITES PAGE D'ACCUEIL ////////
 
@@ -159,7 +160,7 @@ if (token) {
 
 /////// MODALES ////////
 
-// Ouverture modalDelete
+// Ouverture
 const editButtonGallery = document.querySelector("#edit-button");
 if (editButtonGallery) {
   editButtonGallery.addEventListener("click", function () {
@@ -168,7 +169,7 @@ if (editButtonGallery) {
   });
 }
 
-// Création et gestion du bouton de fermeture des modales
+// Bouton de fermeture
 function createCloseButton() {
   const closeButton = document.createElement("i");
   closeButton.classList.add("fa-solid", "fa-xmark", "close-modal");
@@ -176,20 +177,20 @@ function createCloseButton() {
   return closeButton;
 }
 
-// Mise à jour du DOM
+// Fermeture
 function closeModal() {
+  modalWrapperDelete.classList.remove("active");
+  modalWrapperAdd.classList.remove("active");
   modal.classList.remove("active");
-  const modalWrappers = document.querySelectorAll(".modal-wrapper");
-  modalWrappers.forEach((modalWrapper) => {
-    modalWrapper.innerHTML = "";
-  });
+  modalWrapperDelete.innerHTML = "";
+  modalWrapperAdd.innerHTML = "";
 }
 
 // Gestion de l'overlay
 const overlay = document.querySelector(".overlay");
 overlay.addEventListener("click", closeModal);
 
-// Création et gestion de l'icone de retour en arrière
+// Icone de retour en arrière
 function createBackButton() {
   const backButton = document.createElement("i");
   backButton.classList.add("fa-solid", "fa-arrow-left", "back-modal");
@@ -200,19 +201,9 @@ function createBackButton() {
 // Bascule vers la modale delete
 function switchToModalDelete() {
   modalWrapperAdd.innerHTML = "";
-
-  // Réactivation du DOM
-  const modalWrapperDelete = document.querySelector(".modal-wrapper-delete");
   modalDelete(works);
-
   modalWrapperDelete.classList.add("active");
   modalWrapperAdd.classList.remove("active");
-}
-
-// Fermeture modalAdd
-function closeModalAdd() {
-  modal.classList.remove("active");
-  modalWrapperAdd.innerHTML = "";
 }
 
 // Création contenu "modalDelete"
@@ -263,7 +254,7 @@ function modalDelete(works) {
   });
 }
 
-// Fonction pour gérer la suppression d'un projet
+// Suppression d'un projet
 async function deleteWork(work) {
   const workId = work.dataset.id;
   const response = await fetch(`${WORKS_URL}/${workId}`, {
@@ -291,7 +282,6 @@ function modalAddPhoto() {
   if (modalDelete) {
     modalDelete.innerHTML = "";
   }
-
   modal.innerHTML = "";
 
   // Titre
@@ -324,12 +314,6 @@ function modalAddPhoto() {
   fileInput.setAttribute("id", "file");
   fileInput.setAttribute("name", "image");
   fileInput.setAttribute("accept", "image/*");
-
-  // Aperçu de l'image téléchargée
-  const imagePreview = document.createElement("img");
-  imagePreview.setAttribute("src", "#");
-  imagePreview.setAttribute("alt", "Aperçu de l'image");
-  imagePreview.setAttribute("class", "img-preview");
 
   // Indications
   const fileHint = document.createElement("p");
@@ -378,7 +362,6 @@ function modalAddPhoto() {
   fileContainer.appendChild(uploadIcon);
   fileContainer.appendChild(fileLabel);
   fileContainer.appendChild(fileInput);
-  fileContainer.appendChild(imagePreview);
   fileContainer.appendChild(fileHint);
   descriptionContainer.appendChild(titleLabel);
   descriptionContainer.appendChild(titleInput);
@@ -395,28 +378,19 @@ function modalAddPhoto() {
   modal.appendChild(form);
 }
 
-// Événement pour la sélection d'un fichier
+// Sélection d'un fichier image
 document.addEventListener("change", function (event) {
   if (event.target.matches("#file")) {
-    const imgPreview = document.querySelector(".img-preview");
+    fileInput = event.target;
     const file = event.target.files[0];
     const reader = new FileReader();
     if (file && file.size <= 4 * 1024 * 1024) {
       reader.addEventListener("load", () => {
-        imgPreview.src = reader.result;
-
-        // Récupération de la div containerFile
         const containerFile = document.querySelector(".containerFile");
-
-        // Suppression de tout le contenu existant
         containerFile.innerHTML = "";
-
-        // Création de l'élément img pour l'image prévisualisée
         const imagePreview = document.createElement("img");
         imagePreview.classList.add("img-preview", "visible");
         imagePreview.src = reader.result;
-
-        // Ajout image prévisualisée à containerFile
         containerFile.appendChild(imagePreview);
       });
       reader.readAsDataURL(file);
@@ -426,72 +400,59 @@ document.addEventListener("change", function (event) {
   }
 });
 
-// Fonction pour valider le formulaire
-function validateForm(formData) {
-  const title = formData.get("#title");
-  const category = formData.get("selectCategory");
-  const image = formData.get("img-preview");
+// Validation formulaire d'ajout de photo
+function handleValidation(event) {
+  event.preventDefault();
+  const title = document.getElementById("title").value;
+  const category = document.getElementById("selectCategory").value;
 
-  // Vérifie si les champs obligatoires sont remplis
-  if (!title || !category || !image) {
-    if (!title) {
-      console.log("Le champ 'Titre' est vide.");
+  // Vérifie si l'élément fileInput existe
+  if (fileInput) {
+    const image = fileInput.files[0];
+
+    // Vérifie si un fichier est sélectionné
+    if (image) {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("image", image);
+
+      // Envoi des données à l'API
+      fetch(WORKS_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Erreur lors de l'ajout de la photo");
+          }
+          return response.json();
+        })
+        .then((json) => {
+          console.log("Photo ajoutée avec succès:", json);
+          closeModal();
+          fetchWorks();
+          handleButtonStyle();
+        })
+        .catch((error) => {
+          console.error("Erreur:", error);
+        });
+    } else {
+      alert("Veuillez sélectionner une image.");
     }
-    if (!category) {
-      console.log("Le champ 'Catégorie' est vide.");
-    }
-    if (!image) {
-      console.log("Aucune image sélectionnée.");
-    }
-    alert("Veuillez remplir tous les champs obligatoires.");
-    return false;
-  }
-
-  return true;
-}
-
-// Message de succès
-function displayMessage(message, isSuccess) {
-  const messageElement = document.createElement("div");
-  messageElement.textContent = message;
-  messageElement.classList.add(isSuccess ? "success" : "error");
-  document.body.appendChild(messageElement);
-
-  // Supprimer le message après quelques secondes
-  setTimeout(() => {
-    messageElement.remove();
-  }, 3000);
-}
-
-// Gestion du clic sur le bouton "Valider"
-async function handleValidation(event) {
-  console.log("Clic sur le bouton Valider");
-
-  // Récupération des données du formulaire
-  const formData = new FormData(form);
-
-  // Validation du formulaire
-  if (validateForm(formData)) {
-    // Envoi des données au serveur
-    fetch(WORKS_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    }).then((response) => {
-      if (response.ok) {
-        console.log("Projet ajouté avec succès !");
-        closeModal();
-        displayMessage("Projet ajouté avec succès !", true);
-        fetchWorks();
-      } else {
-        console.error(
-          "Erreur lors de l'envoi des données:",
-          response.statusText
-        );
-        displayMessage("Erreur lors de l'envoi des données.", false);
-      }
-    });
+  } else {
+    alert("Erreur: Impossible de trouver l'élément 'file'.");
   }
 }
+
+// Changement style bouton formulaire validé
+function handleButtonStyle() {
+  const submitButton = document.querySelector(".btn-modalAddPhoto");
+  if (submitButton) {
+    submitButton.style.backgroundColor = "#1d6154";
+  }
+}
+handleButtonStyle(true);

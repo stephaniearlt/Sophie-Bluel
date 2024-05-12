@@ -472,7 +472,6 @@ footer nav ul {
   left: 0;
   background: rgba(0, 0, 0, 0.5);
   transition: opacity 0.4s;
-  z-index: 9998;
 }
 
 #modal.active .overlay {
@@ -496,27 +495,14 @@ footer nav ul {
 
 /* ModalDelete */
 
-.modal-wrapper-delete {
-  width: 630px;
-  height: auto;
-  background-color: #FFFFFF;
-  border-radius: 10px;
-  position: absolute;
-  padding: 30px;
-  transition: opacity 0.4s ease-out;
-  z-index: 10001;
-  text-align: center;
-}
-
+.modal-wrapper-delete,
 .modal-wrapper-add {
   width: 630px;
   height: auto;
   background-color: #FFFFFF;
   border-radius: 10px;
   position: absolute;
-  padding: 30px;
   transition: opacity 0.4s ease-out;
-  z-index: 10000;
   text-align: center;
 }
 
@@ -530,8 +516,7 @@ footer nav ul {
   font-size: 24px;
 }
 
-.add-photo-button,
-.btn-modalAddPhoto {
+.add-photo-button {
   font-family: "Syne";
   font-size: 14px;
   font-weight: 700;
@@ -565,8 +550,6 @@ footer nav ul {
 figure {
   position: relative;
 }
-
-/* ModalAdd */
 
 .back-modal {
   position: absolute;
@@ -642,6 +625,9 @@ figure {
   flex-direction: column;
   align-items: center;
   position: relative;
+  padding-bottom: 25px;
+  margin-bottom: 0px;
+  border-bottom: solid 1px #B3B3B3;
 }
 
 .descriptionFile label,
@@ -684,12 +670,3 @@ figure {
   margin: 30px auto;
   position: relative;
 }
-
-/*.btn-modalAddPhoto::before {
-  content: "";
-  position: absolute;
-  bottom: 60px;
-  left: -90px;
-  width: 420px;
-  border-bottom: 1px solid #B3B3B3;
-}*/
