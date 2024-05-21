@@ -1,5 +1,4 @@
 ////// ELEMENTS REUTILISABLES ////////
-
 const token = localStorage.getItem("token");
 
 // Constantes URLs API
@@ -520,7 +519,8 @@ function handleValidation(event) {
     })
     .then(function (json) {
       console.log("Photo ajoutée avec succès:", json);
-      closeModal();
+      //closeModal();
+      modalAddPhoto();
       fetchWorks();
     })
     .catch(function (error) {
